@@ -16,7 +16,7 @@ export function Lesson({ title, slug, availableAt, type }: LessonProps) {
   })
 
   return (
-    <a href="#">
+    <a href="#" className="group">
       <span className="text-gray-300">
         {availableDateFormat}
       </span>
