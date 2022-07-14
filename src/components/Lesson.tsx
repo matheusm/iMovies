@@ -1,7 +1,7 @@
 import { CheckCircle, Lock } from 'phosphor-react'
 import { isPast, format } from 'date-fns'
 import ptBr from 'date-fns/locale/pt-BR'
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 interface LessonProps {
   title: string;
@@ -11,10 +11,13 @@ interface LessonProps {
 }
 
 export function Lesson({ title, slug, availableAt, type }: LessonProps) {
+  const { slug: routerSlug } = useParams()
   const isLessonAvailable = isPast(availableAt);
   const availableDateFormat = format(availableAt, "EEEE' • 'd' de 'MMMM' • 'k'h'mm", {
     locale: ptBr
   })
+
+  const isActiveLesson = slug === routerSlug;
 
   return (
     <Link to={`/event/lesson/${slug}`} className="group">
@@ -22,10 +25,10 @@ export function Lesson({ title, slug, availableAt, type }: LessonProps) {
         {availableDateFormat}
       </span>
 
-      <div className="rounded border border-gray-500 p-4 mt-2 group-hover:border-green-500">
+      <div className={`rounded border border-gray-500 p-4 mt-2 group-hover:border-green-500 ${isActiveLesson? 'bg-green-500' : ''}`}>
         <header className="flex items-center justify-between">
           {isLessonAvailable ? (
-            <span className="flex items-center gap-2 text-sm text-blue-500 font-medium">
+            <span className={`flex items-center gap-2 text-sm font-medium ${isActiveLesson ? 'text-white' : 'text-blue-500'}`}>
               <CheckCircle size={20} />
               Conteúdo liberado
             </span>
@@ -35,12 +38,12 @@ export function Lesson({ title, slug, availableAt, type }: LessonProps) {
               Em breve
             </span>
           )}
-          <span className="text-xs rounded px-2 py-[0.125rem] text-white border border-green-300 font-bold">
+          <span className={`text-xs rounded px-2 py-[0.125rem] text-white border font-bold ${isActiveLesson ? 'border-white' : 'border-green-300'}`}>
             {type === 'live' ? 'AO VIVO' : 'AULA PRÁTICA'}
           </span>
         </header>
 
-        <strong className="text-gray-200 mt-5 block">
+        <strong className={`mt-5 block ${isActiveLesson ? 'text-white' : 'text-gray-200'}`}>
           {title}
         </strong>
       </div>
